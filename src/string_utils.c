@@ -7,14 +7,14 @@
 void trim(char** sptr) {
   char* s = *sptr;
   char* ptr = s;
-  
+
   ptr = s + strlen(s)-1;
   while(isspace((int)*ptr)) ptr--;
   *(ptr+1) = '\0';
-  
+
   ptr = s;
   while(isspace((int)*ptr)) ptr++;
-  
+
   *sptr = ptr;
 }
 

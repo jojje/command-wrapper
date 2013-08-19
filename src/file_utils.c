@@ -1,7 +1,7 @@
 // Note on memory leaks:
 // parse_env_vars and parse_config_entry will leak ~ 50 bytes per config entry, so unless
-// you have millions of command entries, the machine should still be able to launch and 
-// run the wrapped process. These elements need to be passed to the child process and 
+// you have millions of command entries, the machine should still be able to launch and
+// run the wrapped process. These elements need to be passed to the child process and
 // we don't know how big they are in advance, so we can't use stack space and we can't
 // free them either before invoking the child.
 
@@ -16,7 +16,7 @@
 char* malloc_string(size_t size) {
   char* s = (char*) malloc(size);
   if(!s) {
-     error("Failed to allocate memory\n");
+    error("Failed to allocate memory\n");
   }
   return s;
 }
@@ -77,20 +77,17 @@ BOOL get_name_value(const char* line, char** pname, char** pvalue){
   pos = strcspn(line, "=");
   if(pos == len)
     return FALSE;
-  
+
   strncpy_null(*pname, line, pos);
   trim(pname);
-  
+
   line += pos+1;
   strncpy_null(*pvalue, line, strlen(line));
   trim(pvalue);
-  
+
   return TRUE;
 }
 
-
-// E
-//
 BOOL parse_env_vars(config_entry* entry, const char* line, char delim) {
   char* s = malloc_string(strlen(line)+1);
   size_t i, j, len = strlen(line);
@@ -110,7 +107,7 @@ BOOL parse_env_vars(config_entry* entry, const char* line, char delim) {
   s++;
   start = s;
   for(i=0; *s; s++) {
-    if( *s == '|' ) { 
+    if( *s == '|' ) {
       *s = 0;       // Replace | with null to simplify extracting the token
       entry->envvars[i] = (char*) malloc(strlen(start) + 1);
       strcpy(entry->envvars[i], start);
@@ -138,12 +135,12 @@ BOOL parse_config_entry(config_entry* entry, char* line){
 
   if(pos == len)
     return FALSE;
-  
+
   entry->cmd = malloc_string( pos+1 );
 
   strncpy_null(entry->cmd, line, pos);
   trim(&entry->cmd);
-  
+
   // Absolute path to command
   line += pos+1;
   pos = strcspn(line, "|");

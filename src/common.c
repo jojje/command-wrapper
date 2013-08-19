@@ -30,7 +30,7 @@ void info(const char* fmt, ...) {
       strcpy(msg,"INFO ");
       strcat(msg,fmt);
       strcat(msg,"\n");
-  
+
       va_start(args, fmt);
       vfprintf(stdout, msg, args);
       va_end(args);

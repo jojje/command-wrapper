@@ -51,41 +51,41 @@ void parse_verbose(int* argc, char* argv[]) {
 // Sets an environment variable to key=value and returns a pointer to the
 // string array containing the ammended environment list.
 char** setEnv(char* key, char* value, char* envp[]) {
-    int i, found = FALSE;
-    char** new_envp;
-    char lkey[MAX_PATH_LEN+1];
-    size_t pos;
+  int i, found = FALSE;
+  char** new_envp;
+  char lkey[MAX_PATH_LEN+1];
+  size_t pos;
 
+  for(i=0; envp[i] != 0; i++) {
+    pos = strcspn(envp[i], "=");
+    strncpy_null(lkey, envp[i], pos);
+    if( strcmp(key, lkey) == 0 ) {
+      found = TRUE;
+      info("Replacing ENV: %s -> %s=%s\n", envp[i], key, value);
+      envp[i] = (char*) malloc( strlen(key) * strlen(value) + 2 );
+      sprintf(envp[i], "%s=%s", key, value);
+    }
+  }
+
+  if(!found) {
+    new_envp = (char**) malloc( (i+2) * sizeof(char**) );
     for(i=0; envp[i] != 0; i++) {
-        pos = strcspn(envp[i], "=");
-        strncpy_null(lkey, envp[i], pos);
-        if( strcmp(key, lkey) == 0 ) {
-          found = TRUE;
-          info("Replacing ENV: %s -> %s=%s\n", envp[i], key, value);
-          envp[i] = (char*) malloc( strlen(key) * strlen(value) + 2 );
-          sprintf(envp[i], "%s=%s", key, value);
-        } 
+      new_envp[i] = envp[i];
     }
+    new_envp[i] = (char*) malloc( strlen(key) * strlen(value) + 2 );
+    sprintf(new_envp[i], "%s=%s", key, value);
+    info("Adding ENV: %s\n", new_envp[i]);
+    new_envp[i+1] = 0;
+    envp = new_envp;
+  }
 
-    if(!found) {
-        new_envp = (char**) malloc( (i+2) * sizeof(char**) );
-        for(i=0; envp[i] != 0; i++) {
-          new_envp[i] = envp[i];
-        }
-        new_envp[i] = (char*) malloc( strlen(key) * strlen(value) + 2 );
-        sprintf(new_envp[i], "%s=%s", key, value);
-        info("Adding ENV: %s\n", new_envp[i]);
-        new_envp[i+1] = 0;
-        envp = new_envp;
-    }
-
-    return envp;
+  return envp;
 }
 
 // Searches the ${HOME}/.command_wrapper files for user specified
 // configuration for the command (key) specified.
 //
-// Returns the extracted configuration information for the command 
+// Returns the extracted configuration information for the command
 // if it was found in the config file, else FALSE.
 config_entry* find_config(const char* cmd) {
   char cfg_file[MAX_PATH_LEN+1];
@@ -102,7 +102,7 @@ config_entry* find_config(const char* cmd) {
           "Please create it and add command mappings to it in the format\n\n"
           "COMMAND = DIRECTORY\n\n"
           "where COMMAND is the name of a command wrapper instance and "
-          "DIRECTORY is the directory where the real command resides.\n", 
+          "DIRECTORY is the directory where the real command resides.\n",
           cfg_file);
 
   entry = (config_entry*) malloc( sizeof(config_entry) );
@@ -138,9 +138,9 @@ int launch(int argc, char* argv[], char* envp[]) {
   // reason, so let's quote all args except the command name itself as
   // execv/spawn will bork at the latter.
   for(i=1; i<argc; i++) {
-      s = (char*) malloc( strlen(argv[i]) + 3);
-      quote(s,argv[i]);
-      argv[i] = s;
+    s = (char*) malloc( strlen(argv[i]) + 3);
+    quote(s,argv[i]);
+    argv[i] = s;
   }
 #endif
 
@@ -187,7 +187,7 @@ int main(int argc, char* argv[], char* envp[]) {
     envp = setEnv(kv.key, kv.value, envp);
   }
 
-  free(entry);                       // No longer needed as all bits of data 
+  free(entry);                       // No longer needed as all bits of data
                                      // have gone into their target structures.
   return launch(argc, argv, envp);
 }
