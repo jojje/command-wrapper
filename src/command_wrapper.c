@@ -178,6 +178,9 @@ int main(int argc, char* argv[], char* envp[]) {
 
   parse_verbose(&argc, argv);
 
+  info("Command Wrapper v%s", VERSION);
+  info("Source and documentation: %s\n", HOME_PAGE);
+
   basename(&cmd);
   entry = find_config(cmd);
 

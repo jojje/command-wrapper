@@ -1,6 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define VERSION "0.1"
+#define HOME_PAGE "https://github.com/jojje/command-wrapper"
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
 #  define IS_WINDOWS
 #endif
