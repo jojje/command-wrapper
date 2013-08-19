@@ -190,7 +190,5 @@ int main(int argc, char* argv[], char* envp[]) {
   free(entry);                       // No longer needed as all bits of data 
                                      // have gone into their target structures.
   return launch(argc, argv, envp);
-
-  return 0;
 }
 
